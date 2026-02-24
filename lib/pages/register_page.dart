@@ -13,6 +13,15 @@ class RegisterPage extends StatelessWidget {
 
   // register
   void register(BuildContext context) async {
+    if (passwordController.text != confirmPasswordController.text) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Passwords do not match')),
+        );
+      }
+      return;
+    }
+
     final authService = AuthService();
     try {
       await authService.signUpWithEmailAndPassword(
@@ -21,9 +30,9 @@ class RegisterPage extends StatelessWidget {
       );
     } catch (e) {
       if (context.mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text(e.toString())));
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(e.toString())),
+        );
       }
     }
   }
