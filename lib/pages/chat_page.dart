@@ -67,7 +67,7 @@ class ChatPage extends StatelessWidget {
         // return message list
         return ListView(
           children: snapshot.data!.docs
-              .map((doc) => _buildMessageItem(doc))
+              .map((doc) => _buildMessageItem(context, doc))
               .toList(),
         );
       },
@@ -75,28 +75,76 @@ class ChatPage extends StatelessWidget {
   }
 
   // build message item
-  Widget _buildMessageItem(DocumentSnapshot doc) {
+  Widget _buildMessageItem(BuildContext context, DocumentSnapshot doc) {
     Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+    String currentUserId = _authService.currentUser!.uid;
+    final theme = Theme.of(context);
 
-    return Text(data['message']);
+    // sender is stored as 'id' in Firestore
+    bool isCurrentUser = data['id'] == currentUserId;
+
+    return Align(
+      alignment: isCurrentUser ? Alignment.centerRight : Alignment.centerLeft,
+      child: Container(
+        margin: EdgeInsets.only(
+          top: 4,
+          bottom: 4,
+          left: isCurrentUser ? 48 : 8,
+          right: isCurrentUser ? 8 : 48,
+        ),
+        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+        decoration: BoxDecoration(
+          color: isCurrentUser
+              ? theme.colorScheme.primary
+              : theme.colorScheme.tertiary,
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(16),
+            topRight: Radius.circular(16),
+            bottomLeft: Radius.circular(isCurrentUser ? 16 : 4),
+            bottomRight: Radius.circular(isCurrentUser ? 4 : 16),
+          ),
+        ),
+        child: Text(
+          data['message'] ?? '',
+          style: TextStyle(
+            color: isCurrentUser
+                ? theme.colorScheme.onPrimary
+                : theme.colorScheme.onTertiary,
+          ),
+        ),
+      ),
+    );
   }
 
   // build message input
   Widget _buildMessageInput(BuildContext context) {
-    return Row(
-      children: [
-        // textfield should take up most of the space
-        Expanded(
-          child: MyTextField(
-            controller: messageController,
-            hintText: 'Type your message here...',
-            isPassword: false,
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 50),
+      child: Row(
+        children: [
+          // textfield should take up most of the space
+          Expanded(
+            child: MyTextField(
+              controller: messageController,
+              hintText: 'Type your message here...',
+              isPassword: false,
+            ),
           ),
-        ),
 
-        // send button
-        IconButton(onPressed: () => sendMessage(context), icon: Icon(Icons.send)),
-      ],
+          // send button
+          Container(
+            decoration: BoxDecoration(
+              color: Colors.green,
+              shape: BoxShape.circle,
+            ),
+            margin: EdgeInsets.only(right: 25),
+            child: IconButton(
+              onPressed: () => sendMessage(context),
+              icon: Icon(Icons.send, color: Colors.white),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
