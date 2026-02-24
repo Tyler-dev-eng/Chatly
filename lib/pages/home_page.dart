@@ -1,12 +1,12 @@
 import 'package:chatly/auth/auth_service.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:chatly/components/my_drawer.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
   // sign out
-  void signOut(BuildContext context) async {
+  void signOut() async {
     final authService = AuthService();
     await authService.signOut();
   }
@@ -16,15 +16,9 @@ class HomePage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('Home'),
-        actions: [
-          IconButton(
-            onPressed: () {
-              FirebaseAuth.instance.signOut();
-            },
-            icon: Icon(Icons.logout),
-          ),
-        ],
+        actions: [IconButton(onPressed: signOut, icon: Icon(Icons.logout))],
       ),
+      drawer: MyDrawer(),
       body: Center(child: Text('Home Page')),
     );
   }
