@@ -2,13 +2,13 @@ import 'package:chatly/components/my_button.dart';
 import 'package:chatly/components/my_textfield.dart';
 import 'package:flutter/material.dart';
 
-class LoginPage extends StatelessWidget {
-  LoginPage({super.key, required this.onRegisterTap});
+class RegisterPage extends StatelessWidget {
+  RegisterPage({super.key, required this.onLoginTap});
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-
-  // tap to go to register page
-  final VoidCallback onRegisterTap;
+  final TextEditingController confirmPasswordController =
+      TextEditingController();
+  final VoidCallback onLoginTap;
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +29,7 @@ class LoginPage extends StatelessWidget {
 
             // welcome text
             Text(
-              'Welcome to Chatly',
+              'Let\'s create an account for you!',
               style: TextStyle(
                 fontSize: 16,
                 color: Theme.of(context).colorScheme.primary,
@@ -54,27 +54,36 @@ class LoginPage extends StatelessWidget {
               controller: passwordController,
             ),
 
+            SizedBox(height: 10),
+
+            // confirm password input
+            MyTextField(
+              hintText: 'Confirm Password',
+              isPassword: true,
+              controller: confirmPasswordController,
+            ),
+
             SizedBox(height: 25),
 
-            // login button
-            MyButton(text: 'Login', onTap: () {}),
+            // register button
+            MyButton(text: 'Register', onTap: () {}),
 
             SizedBox(height: 25),
 
-            // register now
+            // login now
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  'Don\'t have an account? ',
+                  'Already have an account? ',
                   style: TextStyle(
                     color: Theme.of(context).colorScheme.primary,
                   ),
                 ),
                 GestureDetector(
-                  onTap: onRegisterTap,
+                  onTap: onLoginTap,
                   child: Text(
-                    'Register now!',
+                    'Login now!',
                     style: TextStyle(
                       color: Theme.of(context).colorScheme.primary,
                       fontWeight: FontWeight.bold,
