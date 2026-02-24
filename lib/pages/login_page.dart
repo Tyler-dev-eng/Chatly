@@ -9,10 +9,7 @@ class LoginPage extends StatelessWidget {
   final TextEditingController passwordController = TextEditingController();
 
   // login
-  void login() async {
-    print('Email: ${emailController.text}');
-    print('Password: ${passwordController.text}');
-
+  void login(BuildContext context) async {
     final authService = AuthService();
 
     try {
@@ -21,7 +18,11 @@ class LoginPage extends StatelessWidget {
         passwordController.text,
       );
     } catch (e) {
-      print(e);
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(e.toString())),
+        );
+      }
     }
   }
 
@@ -75,7 +76,7 @@ class LoginPage extends StatelessWidget {
             SizedBox(height: 25),
 
             // login button
-            MyButton(text: 'Login', onTap: login),
+            MyButton(text: 'Login', onTap: () => login(context)),
 
             SizedBox(height: 25),
 

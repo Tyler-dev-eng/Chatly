@@ -1,3 +1,4 @@
+import 'package:chatly/auth/auth_service.dart';
 import 'package:chatly/components/my_button.dart';
 import 'package:chatly/components/my_textfield.dart';
 import 'package:flutter/material.dart';
@@ -9,6 +10,23 @@ class RegisterPage extends StatelessWidget {
   final TextEditingController confirmPasswordController =
       TextEditingController();
   final VoidCallback onLoginTap;
+
+  // register
+  void register(BuildContext context) async {
+    final authService = AuthService();
+    try {
+      await authService.signUpWithEmailAndPassword(
+        emailController.text,
+        passwordController.text,
+      );
+    } catch (e) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(e.toString())));
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -66,7 +84,7 @@ class RegisterPage extends StatelessWidget {
             SizedBox(height: 25),
 
             // register button
-            MyButton(text: 'Register', onTap: () {}),
+            MyButton(text: 'Register', onTap: () => register(context)),
 
             SizedBox(height: 25),
 
