@@ -1,3 +1,4 @@
+import 'package:chatly/auth/auth_service.dart';
 import 'package:chatly/components/my_button.dart';
 import 'package:chatly/components/my_textfield.dart';
 import 'package:flutter/material.dart';
@@ -6,6 +7,23 @@ class LoginPage extends StatelessWidget {
   LoginPage({super.key, required this.onRegisterTap});
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+
+  // login
+  void login() async {
+    print('Email: ${emailController.text}');
+    print('Password: ${passwordController.text}');
+
+    final authService = AuthService();
+
+    try {
+      await authService.signInWithEmailAndPassword(
+        emailController.text,
+        passwordController.text,
+      );
+    } catch (e) {
+      print(e);
+    }
+  }
 
   // tap to go to register page
   final VoidCallback onRegisterTap;
@@ -57,7 +75,7 @@ class LoginPage extends StatelessWidget {
             SizedBox(height: 25),
 
             // login button
-            MyButton(text: 'Login', onTap: () {}),
+            MyButton(text: 'Login', onTap: login),
 
             SizedBox(height: 25),
 

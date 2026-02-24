@@ -29,6 +29,7 @@ class _MyTextFieldState extends State<MyTextField> {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 25.0),
       child: TextField(
+        controller: widget.controller,
         obscureText: widget.isPassword && _obscureText,
         decoration: InputDecoration(
           enabledBorder: OutlineInputBorder(

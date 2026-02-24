@@ -1,4 +1,4 @@
-import 'package:chatly/auth/login_or_register_page.dart';
+import 'package:chatly/auth/auth_gate.dart';
 import 'package:chatly/firebase_options.dart';
 import 'package:chatly/themes/themes.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -17,7 +17,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: LoginOrRegisterPage(),
+      home: AuthGate(),
       theme: lightTheme,
     );
   }
