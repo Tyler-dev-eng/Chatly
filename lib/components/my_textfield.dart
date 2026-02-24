@@ -4,11 +4,13 @@ class MyTextField extends StatefulWidget {
   final String hintText;
   final bool isPassword;
   final TextEditingController controller;
+  final FocusNode? focusNode;
   const MyTextField({
     super.key,
     required this.hintText,
     required this.isPassword,
     required this.controller,
+    this.focusNode,
   });
 
   @override
@@ -30,6 +32,7 @@ class _MyTextFieldState extends State<MyTextField> {
       padding: const EdgeInsets.symmetric(horizontal: 25.0),
       child: TextField(
         controller: widget.controller,
+        focusNode: widget.focusNode,
         obscureText: widget.isPassword && _obscureText,
         decoration: InputDecoration(
           enabledBorder: OutlineInputBorder(

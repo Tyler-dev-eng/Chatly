@@ -4,11 +4,16 @@ import 'package:chatly/services/auth/auth_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
-class ChatPage extends StatelessWidget {
+class ChatPage extends StatefulWidget {
   final String receiverEmail;
   final String receiverId;
   ChatPage({super.key, required this.receiverEmail, required this.receiverId});
 
+  @override
+  State<ChatPage> createState() => _ChatPageState();
+}
+
+class _ChatPageState extends State<ChatPage> {
   // text controller
   final TextEditingController messageController = TextEditingController();
 
@@ -16,11 +21,46 @@ class ChatPage extends StatelessWidget {
   final ChatServices _chatServices = ChatServices();
   final AuthService _authService = AuthService();
 
+  // textfield focus
+  FocusNode messageFocusNode = FocusNode();
+
+  @override
+  void initState() {
+    super.initState();
+    messageFocusNode.addListener(() {
+      if (messageFocusNode.hasFocus) {
+        Future.delayed(const Duration(milliseconds: 500), () => scrollDown());
+      }
+    });
+
+    Future.delayed(const Duration(milliseconds: 500), () => scrollDown());
+  }
+
+  @override
+  void dispose() {
+    messageFocusNode.dispose();
+    messageController.dispose();
+    super.dispose();
+  }
+
+  // scroll controller
+  ScrollController scrollController = ScrollController();
+  void scrollDown() {
+    scrollController.animateTo(
+      scrollController.position.maxScrollExtent,
+      duration: Duration(milliseconds: 500),
+      curve: Curves.easeInOut,
+    );
+  }
+
   // send message
   void sendMessage(BuildContext context) async {
     try {
       if (messageController.text.isNotEmpty) {
-        await _chatServices.sendMessage(receiverId, messageController.text);
+        await _chatServices.sendMessage(
+          widget.receiverId,
+          messageController.text,
+        );
         messageController.clear();
       }
     } catch (e) {
@@ -30,12 +70,14 @@ class ChatPage extends StatelessWidget {
         ).showSnackBar(SnackBar(content: Text(e.toString())));
       }
     }
+
+    scrollDown();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Chat with $receiverEmail')),
+      appBar: AppBar(title: Text('Chat with ${widget.receiverEmail}')),
       body: Column(
         children: [
           // display all messages
@@ -52,7 +94,7 @@ class ChatPage extends StatelessWidget {
   Widget _buildMessageList() {
     String currentUserId = _authService.currentUser!.uid;
     return StreamBuilder(
-      stream: _chatServices.getMessages(currentUserId, receiverId),
+      stream: _chatServices.getMessages(currentUserId, widget.receiverId),
       builder: (context, snapshot) {
         // errors
         if (snapshot.hasError) {
@@ -66,6 +108,7 @@ class ChatPage extends StatelessWidget {
 
         // return message list
         return ListView(
+          controller: scrollController,
           children: snapshot.data!.docs
               .map((doc) => _buildMessageItem(context, doc))
               .toList(),
@@ -125,6 +168,7 @@ class ChatPage extends StatelessWidget {
           // textfield should take up most of the space
           Expanded(
             child: MyTextField(
+              focusNode: messageFocusNode,
               controller: messageController,
               hintText: 'Type your message here...',
               isPassword: false,
