@@ -1,4 +1,4 @@
-import 'package:chatly/auth/auth_gate.dart';
+import 'package:chatly/services/auth/auth_gate.dart';
 import 'package:chatly/firebase_options.dart';
 import 'package:chatly/themes/themes.dart';
 import 'package:firebase_core/firebase_core.dart';

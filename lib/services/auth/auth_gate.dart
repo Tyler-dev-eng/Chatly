@@ -1,4 +1,4 @@
-import 'package:chatly/auth/login_or_register_page.dart';
+import 'package:chatly/services/auth/login_or_register_page.dart';
 import 'package:chatly/pages/home_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';

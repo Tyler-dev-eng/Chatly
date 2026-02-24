@@ -1,4 +1,4 @@
-import 'package:chatly/auth/auth_service.dart';
+import 'package:chatly/services/auth/auth_service.dart';
 import 'package:chatly/components/settings_page.dart';
 import 'package:flutter/material.dart';
 
